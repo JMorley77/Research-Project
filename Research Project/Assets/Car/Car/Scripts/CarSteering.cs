@@ -1,6 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class CarSteering : MonoBehaviour
+public class CarSteering : NetworkBehaviour
 {
     private float steeringTorque = 1.5f;
     private float driftTorque = 2f;
@@ -25,6 +26,8 @@ public class CarSteering : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsOwner)
+            return;
         SideVelocity();
         Steering();
         BodyRoll();

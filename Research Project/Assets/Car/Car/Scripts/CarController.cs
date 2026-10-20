@@ -2,8 +2,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Unity.Netcode;
 
-public class CarController : MonoBehaviour
+public class CarController : NetworkBehaviour
 {
     public CarPreset preset;
     public GameObject leftBrakeLight;
@@ -25,12 +26,16 @@ public class CarController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsOwner)
+            return;
         Gravity.ApplyGravity(rb);
         Lights();
         checkGroundMaterial();
     }
      private void Update()
     {
+        if (!IsOwner)
+            return;
         DriftSmoke();
         AnimateWheels();
     }

@@ -1,7 +1,8 @@
 using Unity.Multiplayer.Center.Common;
 using UnityEngine;
+using Unity.Netcode;
 
-public class CarSuspension : MonoBehaviour
+public class CarSuspension : NetworkBehaviour
 {
 
     public CarPreset preset;
@@ -19,6 +20,8 @@ public class CarSuspension : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsOwner)
+            return;
         Suspension();
     }
 

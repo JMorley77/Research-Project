@@ -1,6 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class CarMovement : MonoBehaviour
+public class CarMovement : NetworkBehaviour
 {
     public CarPreset carPreset;
     public float speed;
@@ -14,13 +15,16 @@ public class CarMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner)
+            return;
         float distanceTravelled = Vector3.Distance(lastPosition,transform.position);
         speed = Mathf.RoundToInt(distanceTravelled / Time.deltaTime);
         lastPosition = transform.position;
     }
     private void FixedUpdate()
     {
-
+        if (!IsOwner)
+            return;
         Movement();
         Downforce();
     }
