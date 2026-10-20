@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3b3afdd9f9c36545a46a9048bb47eb0, type: 3}
+  m_Name: Testing
+  m_EditorClassIdentifier: 
+  engineHP: 115
+  maxRPM: 1300
+  differential: 0.9
+  weight: 1400
+  rearWing: 0
+  Camber: 0
+  rideHeight: 27
+  springRate: 13000
+  damperRate: 1000
+  drifting: 1
