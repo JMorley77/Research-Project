@@ -43,7 +43,16 @@ public class CarController : NetworkBehaviour
 
     private void AnimateWheels()
     {
-        float input = Input.GetAxis("Horizontal");
+        float input = 0f;
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            input = 1f;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            input = -1f;
+        }
         steerAngle = input * maxSteerAngle;
         frontLeft.localRotation = Quaternion.Euler(steerAngle, 0, 0);
         frontRight.localRotation = Quaternion.Euler(-steerAngle, 0, 0);

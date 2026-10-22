@@ -31,7 +31,16 @@ public class CarMovement : NetworkBehaviour
        
     private void Movement()
     {
-        float throttle = Input.GetAxis("Vertical");
+        float throttle = 0f;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            throttle = 1f;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            throttle = -1f;
+        }
         Vector3 velocity = rb.linearVelocity;
         Vector3 forwards = rb.rotation * Vector3.forward;
         

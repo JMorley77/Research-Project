@@ -36,7 +36,16 @@ public class CarSteering : NetworkBehaviour
 
     private void Steering()
     {
-        float steer = Input.GetAxis("Horizontal");
+        float steer = 0f;
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            steer = 1f;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            steer = -1f;
+        }
         float ackermannSteering = steer* (1f + Mathf.Abs(steer)*(ackermann - 1f));
         rb.angularVelocity *= steerControl;
 
