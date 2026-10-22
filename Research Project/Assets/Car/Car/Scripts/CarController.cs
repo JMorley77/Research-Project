@@ -1,8 +1,9 @@
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Unity.Netcode;
+using UnityEngine.Windows;
 
 public class CarController : NetworkBehaviour
 {
@@ -17,25 +18,43 @@ public class CarController : NetworkBehaviour
     public string currentSurface;
 
     private Rigidbody rb;
+    private CarInputNetwork carInput;
+
+    private NetworkVariable<float> networkSteering = new NetworkVariable<float>();
+    private NetworkVariable<float> networkThrottle = new NetworkVariable<float>();
+    private NetworkVariable<bool> networkDrifting = new NetworkVariable<bool>();
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        carInput = GetComponent<CarInputNetwork>();
+
         rb.mass = preset.weight;
     }
 
     private void FixedUpdate()
     {
-        if (!IsOwner)
+        if (!IsServer)
             return;
         Gravity.ApplyGravity(rb);
         Lights();
         checkGroundMaterial();
     }
-     private void Update()
+    private void Update()
     {
-        if (!IsOwner)
+        if (!IsSpawned)
             return;
+
+        // Server updates values for everyone
+        if (IsServer)
+        {
+            networkSteering.Value = carInput.steering;
+            networkThrottle.Value = carInput.throttle;
+            networkDrifting.Value = carInput.drifting;
+        }
+
+        // Everyone updates visuals
+        Lights();
         DriftSmoke();
         AnimateWheels();
     }
@@ -43,44 +62,22 @@ public class CarController : NetworkBehaviour
 
     private void AnimateWheels()
     {
-        float input = 0f;
+        steerAngle = networkSteering.Value * maxSteerAngle;
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            input = 1f;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            input = -1f;
-        }
-        steerAngle = input * maxSteerAngle;
         frontLeft.localRotation = Quaternion.Euler(steerAngle, 0, 0);
         frontRight.localRotation = Quaternion.Euler(-steerAngle, 0, 0);
     }
-        
+
     private void Lights()
     {
-        if( Input.GetKey(KeyCode.W))
-        {
-            leftBrakeLight.SetActive(false);
-            rightBrakeLight.SetActive(false);
-        }
-        else
-        {
-            leftBrakeLight.SetActive(true);
-            rightBrakeLight.SetActive(true);
-        }
+        bool braking = networkThrottle.Value <= 0f;
+
+        leftBrakeLight.SetActive(braking);
+        rightBrakeLight.SetActive(braking);
     }
     private void DriftSmoke()
     {
-        if (Input.GetKey(KeyCode.Space) && preset.drifting)
-        {
-            driftSmoke.SetActive(true);
-        }
-        else
-        {
-            driftSmoke.SetActive(false);
-        }
+        driftSmoke.SetActive(networkDrifting.Value && preset.drifting);
     }
 
 

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cdc7302cf14f8640b1f7869f2febe05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   preset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
   wheelRadius: 0.195
   Wheels: {fileID: 7679666746438489598}
@@ -94,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cdc7302cf14f8640b1f7869f2febe05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   preset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
   wheelRadius: 0.195
   Wheels: {fileID: 8646555336436472957}
@@ -628,6 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cdc7302cf14f8640b1f7869f2febe05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   preset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
   wheelRadius: 0.195
   Wheels: {fileID: 2652215312557560197}
@@ -916,10 +919,13 @@ GameObject:
   - component: {fileID: 6668189695688005500}
   - component: {fileID: 3717769228526234359}
   - component: {fileID: 7129567214437214222}
+  - component: {fileID: -5924757626659518456}
   - component: {fileID: 8105494471356085292}
   - component: {fileID: 1042428157590873722}
   - component: {fileID: 8177257291565616441}
-  - component: {fileID: -5924757626659518456}
+  - component: {fileID: -2286927625423074204}
+  - component: {fileID: 3998949553332235835}
+  - component: {fileID: -2494186149000003022}
   m_Layer: 0
   m_Name: Car (1)
   m_TagString: Player
@@ -998,54 +1004,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8105494471356085292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3808824464512117906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a49b9ad18d6fa14394e2a93d2411d4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  preset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
-  leftBrakeLight: {fileID: 6819494417042858706}
-  rightBrakeLight: {fileID: 4024483846367254874}
-  driftSmoke: {fileID: 5940046634529711224}
-  frontLeft: {fileID: 8162390691107705646}
-  frontRight: {fileID: 8646555336436472957}
-  maxSteerAngle: 50
-  currentSurface: 
---- !u!114 &1042428157590873722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3808824464512117906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3624a78f35d20b408c4ea804db1f848, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  carPreset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
-  speed: 0
---- !u!114 &8177257291565616441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3808824464512117906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98526eaf55b0d6f47ab34603ee707130, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chassis: {fileID: 8309941761693452119}
-  carPreset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
 --- !u!114 &-5924757626659518456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1073,6 +1031,136 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &8105494471356085292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808824464512117906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a49b9ad18d6fa14394e2a93d2411d4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  preset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
+  leftBrakeLight: {fileID: 6819494417042858706}
+  rightBrakeLight: {fileID: 4024483846367254874}
+  driftSmoke: {fileID: 5940046634529711224}
+  frontLeft: {fileID: 8162390691107705646}
+  frontRight: {fileID: 8646555336436472957}
+  maxSteerAngle: 50
+  currentSurface: 
+--- !u!114 &1042428157590873722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808824464512117906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3624a78f35d20b408c4ea804db1f848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  carPreset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
+  speed: 0
+--- !u!114 &8177257291565616441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808824464512117906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98526eaf55b0d6f47ab34603ee707130, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  chassis: {fileID: 8309941761693452119}
+  carPreset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
+--- !u!114 &-2286927625423074204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808824464512117906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
+--- !u!114 &3998949553332235835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808824464512117906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkRigidbody
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
+--- !u!114 &-2494186149000003022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808824464512117906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958ffb7e277edfc4abb5a661c8151447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarInputNetwork
+  ShowTopMostFoldoutHeaderGroup: 1
+  throttle: 0
+  steering: 0
+  drifting: 0
 --- !u!1 &4001128275723650828
 GameObject:
   m_ObjectHideFlags: 0
@@ -11098,6 +11186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cdc7302cf14f8640b1f7869f2febe05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   preset: {fileID: 11400000, guid: 253844d8f6776ca4aa653e730e4eea4f, type: 2}
   wheelRadius: 0.195
   Wheels: {fileID: 8162390691107705646}

@@ -7,15 +7,17 @@ public class CarMovement : NetworkBehaviour
     public float speed;
     Vector3 lastPosition;
     private Rigidbody rb;
+    private CarInputNetwork carInput;
 
     void Start()
     {
         rb = GetComponentInParent<Rigidbody>();
+        carInput = GetComponentInParent<CarInputNetwork>();
     }
 
     private void Update()
     {
-        if (!IsOwner)
+        if (!IsServer)
             return;
         float distanceTravelled = Vector3.Distance(lastPosition,transform.position);
         speed = Mathf.RoundToInt(distanceTravelled / Time.deltaTime);
@@ -23,7 +25,7 @@ public class CarMovement : NetworkBehaviour
     }
     private void FixedUpdate()
     {
-        if (!IsOwner)
+        if (!IsServer)
             return;
         Movement();
         Downforce();
@@ -31,16 +33,8 @@ public class CarMovement : NetworkBehaviour
        
     private void Movement()
     {
-        float throttle = 0f;
+        float throttle = carInput.throttle;
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            throttle = 1f;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            throttle = -1f;
-        }
         Vector3 velocity = rb.linearVelocity;
         Vector3 forwards = rb.rotation * Vector3.forward;
         

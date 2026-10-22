@@ -20,7 +20,7 @@ public class CarSuspension : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsOwner)
+        if (!IsServer)
             return;
         Suspension();
     }

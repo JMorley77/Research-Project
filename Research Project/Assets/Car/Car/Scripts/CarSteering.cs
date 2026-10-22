@@ -16,9 +16,12 @@ public class CarSteering : NetworkBehaviour
     private Rigidbody rb;
     public CarPreset carPreset;
 
+    private CarInputNetwork carInput;
+
     void Start()
     {
         rb = GetComponentInParent<Rigidbody>();
+        carInput = GetComponentInParent<CarInputNetwork>();
         origionalHP = carPreset.engineHP;
         origionalDiff = carPreset.differential;
     }
@@ -26,7 +29,7 @@ public class CarSteering : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsOwner)
+        if (!IsServer)
             return;
         SideVelocity();
         Steering();
@@ -36,20 +39,11 @@ public class CarSteering : NetworkBehaviour
 
     private void Steering()
     {
-        float steer = 0f;
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            steer = 1f;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            steer = -1f;
-        }
+        float steer = carInput.steering;
         float ackermannSteering = steer* (1f + Mathf.Abs(steer)*(ackermann - 1f));
         rb.angularVelocity *= steerControl;
 
-        if (Input.GetKey(KeyCode.Space) && carPreset.drifting)
+        if (carInput.drifting && carPreset.drifting)
         {            
             isDrifting = true;
             steeringTorque = driftTorque;
