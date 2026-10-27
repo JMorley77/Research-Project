@@ -926,6 +926,7 @@ GameObject:
   - component: {fileID: -2286927625423074204}
   - component: {fileID: 3998949553332235835}
   - component: {fileID: -2494186149000003022}
+  - component: {fileID: -7770412189298469339}
   m_Layer: 0
   m_Name: Car (1)
   m_TagString: Player
@@ -1161,6 +1162,22 @@ MonoBehaviour:
   throttle: 0
   steering: 0
   drifting: 0
+--- !u!114 &-7770412189298469339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808824464512117906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3564307c89451d645a9b78b0c876f54f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarSnapshotSender
+  ShowTopMostFoldoutHeaderGroup: 1
+  rb: {fileID: 7129567214437214222}
+  snapshotInterval: 0.02
+  elapsed: 0
 --- !u!1 &4001128275723650828
 GameObject:
   m_ObjectHideFlags: 0
