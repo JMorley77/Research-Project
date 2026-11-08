@@ -4,43 +4,53 @@ using Unity.Netcode;
 public class CarSnapshotSender : NetworkBehaviour
 {
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private CarInputNetwork carInput;
 
-    [SerializeField, Min(0.02f)] private float snapshotInterval;
+    [SerializeField, Min(0.02f)]
+    private float snapshotInterval = 0.05f;
 
-    [SerializeField] private float elapsed;
+    private float elapsed;
 
     private void Awake()
     {
-        if(rb == null)
+        if (rb == null)
         {
-            rb.GetComponent<Rigidbody>();
+            rb = GetComponent<Rigidbody>();
+        }
+        if (carInput == null)
+        {
+            carInput = GetComponent<CarInputNetwork>();
         }
     }
 
     private void FixedUpdate()
     {
-        if (!IsSpawned || !IsServer || rb == null)
+        if (!IsSpawned || !IsServer)
             return;
 
-        elapsed += Time.deltaTime;
+        if (rb == null || carInput == null)
+            return;
+
+        elapsed += Time.fixedDeltaTime;
 
         if (elapsed < snapshotInterval)
             return;
 
         elapsed = 0f;
 
-        var snapshot = new CarSnapshot(rb, Time.realtimeSinceStartupAsDouble);
-        RecieveSnapshotRpc(snapshot);
+        CarSnapshot snapshot = new CarSnapshot(rb,NetworkManager.ServerTime.Time,carInput);
+
+        DistributeSnapshotRpc(snapshot);
     }
 
-    [Rpc(SendTo.Server)]
-    private void RecieveSnapshotRpc(CarSnapshot snapshot)
+    [Rpc(SendTo.NotServer)]
+    private void DistributeSnapshotRpc(CarSnapshot snapshot)
     {
-        Debug.Log("snapshot Recieved, " +
-            "TimeStamp: " + $"{snapshot.timeStamp}, " +
-            "Position:" + $" {snapshot.position} " +
-            "Rotation: " + $"{snapshot.rotation}");
+        Debug.Log(
+            "Snapshot received: " +
+            snapshot.position
+        );
 
+        // We will store snapshots here in the next step.
     }
-
 }
