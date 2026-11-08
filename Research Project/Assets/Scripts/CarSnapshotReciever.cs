@@ -31,7 +31,7 @@ public class CarSnapshotReciever : NetworkBehaviour
         if (!hasSnapshot)
             return 0;
 
-        return NetworkManager.ServerTime.Time - latestSnapshot.timeStamp;
+        return NetworkManager.LocalTime.Time - latestSnapshot.timeStamp;
     }
 
     public double GetTimeSinceLastReceive()
@@ -40,5 +40,16 @@ public class CarSnapshotReciever : NetworkBehaviour
             return 0;
 
         return Time.realtimeSinceStartupAsDouble- lastReceiveTime;
+    }
+
+    private void Update()
+    {
+        if (!IsSpawned || IsServer || !hasSnapshot)
+            return;
+
+        Debug.Log(
+            "Snapshot age: " + GetSnapshotAge().ToString("F3") +
+            " | Velocity: " + latestSnapshot.velocity
+        );
     }
 }

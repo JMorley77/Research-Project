@@ -5,6 +5,7 @@ public class CarSnapshotSender : NetworkBehaviour
 {
     [SerializeField] private Rigidbody rb;
     [SerializeField] private CarInputNetwork carInput;
+    [SerializeField] private CarSnapshotReciever receiver;
 
     [SerializeField, Min(0.02f)]
     private float snapshotInterval = 0.05f;
@@ -14,13 +15,13 @@ public class CarSnapshotSender : NetworkBehaviour
     private void Awake()
     {
         if (rb == null)
-        {
             rb = GetComponent<Rigidbody>();
-        }
+
         if (carInput == null)
-        {
             carInput = GetComponent<CarInputNetwork>();
-        }
+
+        if (receiver == null)
+            receiver = GetComponent<CarSnapshotReciever>();
     }
 
     private void FixedUpdate()
@@ -46,11 +47,9 @@ public class CarSnapshotSender : NetworkBehaviour
     [Rpc(SendTo.NotServer)]
     private void DistributeSnapshotRpc(CarSnapshot snapshot)
     {
-        Debug.Log(
-            "Snapshot received: " +
-            snapshot.position
-        );
+        if (receiver == null)
+            return;
 
-        // We will store snapshots here in the next step.
+        receiver.ReceiveSnapshot(snapshot);
     }
 }
