@@ -8,7 +8,7 @@ public class CarInputNetwork : NetworkBehaviour
     public float steering;
     public bool drifting;
     private double lastInputReceiveTime;
-
+    public float CurrentThrottle => throttle;
 
     void Update()
     {

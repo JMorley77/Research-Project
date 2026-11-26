@@ -1116,7 +1116,20 @@ MonoBehaviour:
   snapshotReceiver: {fileID: 5456438831371786603}
   ghostVisualPrefab: {fileID: 2833298010456543052, guid: 84725d2d8e2f28047aa1a687a5131c01, type: 3}
   ghostMaterial: {fileID: 2100000, guid: e55e7129ff15ee549bd1627528acfd51, type: 2}
-  ghostAfterSeconds: 0.25
+  carInputNetwork: {fileID: 0}
+  splineAnalyser: {fileID: 0}
+  carRigidbody: {fileID: 0}
+  ghostAcceleration: 12
+  ghostMaxSpeed: 35
+  ghostCoastDeceleration: 4
+  ghostAfterSeconds: 0.1
+  ghostRecoveryDelay: 1
+  ghostPositionSmoothTime: 0.15
+  ghostRotationSmoothSpeed: 8
+  maxGhostDistanceFromTrack: 3
+  carRecoveryDistance: 12
+  recoveryCooldown: 2
+  recoveryHeightOffset: 0.5
 --- !u!1 &4001128275723650828
 GameObject:
   m_ObjectHideFlags: 0
