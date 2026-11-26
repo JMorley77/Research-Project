@@ -35,21 +35,11 @@ public class SplineAnalyser : NetworkBehaviour
         {
             float t = i / (float)sampleCount;
 
-            float3 localPosition =
-                SplineUtility.EvaluatePosition(
-                    splineContainer.Spline, t);
+            float3 localPosition = SplineUtility.EvaluatePosition( splineContainer.Spline, t);
 
-            Vector3 sampledPosition =
-                splineContainer.transform.TransformPoint(
-                    new Vector3(
-                        localPosition.x,
-                        localPosition.y,
-                        localPosition.z
-                    )
-                );
+            Vector3 sampledPosition = splineContainer.transform.TransformPoint(new Vector3(localPosition.x,localPosition.y,localPosition.z));
 
-            float distance =
-                Vector3.SqrMagnitude(worldPosition - sampledPosition);
+            float distance =Vector3.SqrMagnitude(worldPosition - sampledPosition);
 
             if (distance < closestDistance)
             {
@@ -62,8 +52,7 @@ public class SplineAnalyser : NetworkBehaviour
         nearestPoint = closestPoint;
         nearestSplineT = closestT;
 
-        distanceFromRacingLine =
-            Vector3.Distance(worldPosition, nearestPoint);
+        distanceFromRacingLine = Vector3.Distance(worldPosition, nearestPoint);
 
         // Calculate the track direction.
         trackDirection = GetWorldTangent(closestT).normalized;
@@ -71,52 +60,35 @@ public class SplineAnalyser : NetworkBehaviour
         // Calculate approximate track curvature.
         float sampleOffset = 1f / sampleCount;
 
-        Vector3 beforeTangent =
-            GetWorldTangent(Mathf.Repeat(
-                closestT - sampleOffset, 1f)).normalized;
+        Vector3 beforeTangent = GetWorldTangent(Mathf.Repeat(closestT - sampleOffset, 1f)).normalized;
 
-        Vector3 afterTangent =
-            GetWorldTangent(Mathf.Repeat(
-                closestT + sampleOffset, 1f)).normalized;
+        Vector3 afterTangent = GetWorldTangent(Mathf.Repeat(closestT + sampleOffset, 1f)).normalized;
 
-        float angle = Vector3.Angle(
-            beforeTangent, afterTangent);
+        float angle = Vector3.Angle(beforeTangent, afterTangent);
 
-        Vector3 beforePosition =
-            GetWorldPosition(Mathf.Repeat(
-                closestT - sampleOffset, 1f));
+        Vector3 beforePosition = GetWorldPosition(Mathf.Repeat(closestT - sampleOffset, 1f));
 
-        Vector3 afterPosition =
-            GetWorldPosition(Mathf.Repeat(
-                closestT + sampleOffset, 1f));
+        Vector3 afterPosition = GetWorldPosition(Mathf.Repeat(closestT + sampleOffset, 1f));
 
-        float distanceBetweenSamples =
-            Vector3.Distance(beforePosition, afterPosition);
+        float distanceBetweenSamples = Vector3.Distance(beforePosition, afterPosition);
 
-        curvature = angle / Mathf.Max(
-            distanceBetweenSamples, 0.001f);
+        curvature = angle / Mathf.Max(distanceBetweenSamples, 0.001f);
 
         return true;
     }
 
     private Vector3 GetWorldPosition(float t)
     {
-        float3 position =
-            SplineUtility.EvaluatePosition(
-                splineContainer.Spline, t);
+        float3 position = SplineUtility.EvaluatePosition(splineContainer.Spline, t);
 
-        return splineContainer.transform.TransformPoint(
-            new Vector3(position.x, position.y, position.z));
+        return splineContainer.transform.TransformPoint(new Vector3(position.x, position.y, position.z));
     }
 
     private Vector3 GetWorldTangent(float t)
     {
-        float3 tangent =
-            SplineUtility.EvaluateTangent(
-                splineContainer.Spline, t);
+        float3 tangent = SplineUtility.EvaluateTangent(splineContainer.Spline, t);
 
-        return splineContainer.transform.TransformDirection(
-            new Vector3(tangent.x, tangent.y, tangent.z));
+        return splineContainer.transform.TransformDirection(new Vector3(tangent.x, tangent.y, tangent.z));
     }
 
     public bool PredictAlongRacingLine(

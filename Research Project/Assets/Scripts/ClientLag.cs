@@ -9,43 +9,37 @@ public class ClientLag : MonoBehaviour
 {
     private void Start()
     {
-        Debug.Log("ClientLag START running");
+        Debug.Log("lag start running");
 
         var playerTags = CurrentPlayer.Tags;
 
         Debug.Log("Player tags: " + string.Join(", ", playerTags));
 
-        NetworkSimulator simulator =
-            GetComponent<NetworkSimulator>();
+        NetworkSimulator simulator = GetComponent<NetworkSimulator>();
 
-        Debug.Log("Simulator found: " + (simulator != null));
+        Debug.Log("found: " + (simulator != null));
 
         if (simulator == null)
         {
-            Debug.LogError(
-                "Network Simulator is missing from NetworkManager."
-            );
+            Debug.LogError("here missing.");
             return;
         }
 
-        bool isLaggedClient =
-            playerTags.Contains("LaggedClient");
+        bool isLaggedClient = playerTags.Contains("LaggedClient");
 
         Debug.Log("Is lagged client: " + isLaggedClient);
 
         if (isLaggedClient)
         {
-            simulator.ConnectionPreset =
-                NetworkSimulatorPresets.Mobile2_5G;
+            simulator.ConnectionPreset = NetworkSimulatorPresets.Mobile2_5G;
 
-            Debug.Log("LAG SIMULATION ENABLED FOR THIS PLAYER");
+            Debug.Log("here enabled");
         }
         else
         {
-            simulator.ConnectionPreset =
-                NetworkSimulatorPresets.None;
+            simulator.ConnectionPreset = NetworkSimulatorPresets.None;
 
-            Debug.Log("Normal network connection");
+            Debug.Log("normal connection");
         }
     }
 }
