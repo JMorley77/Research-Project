@@ -1,4 +1,6 @@
 {
-  "PlayerTags": [],
+  "PlayerTags": [
+    "LaggedClient"
+  ],
   "version": "6000.3.17f1"
 }

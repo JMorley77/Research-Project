@@ -8,6 +8,9 @@ public class CarGhostController : NetworkBehaviour
     [SerializeField] private CarSnapshotReciever snapshotReceiver;
     [SerializeField] private GameObject ghostVisualPrefab;
     [SerializeField] private Material ghostMaterial;
+    [SerializeField] private CarInputNetwork carInputNetwork;
+    [SerializeField] private SplineAnalyser splineAnalyser;
+    [SerializeField] private Rigidbody carRigidbody;
 
     [Header("Ghost Settings")]
     [SerializeField, Min(0.05f)]
@@ -21,8 +24,17 @@ public class CarGhostController : NetworkBehaviour
 
     private void Awake()
     {
+        if (carInputNetwork == null)
+            carInputNetwork = GetComponent<CarInputNetwork>();
+
         if (snapshotReceiver == null)
             snapshotReceiver = GetComponent<CarSnapshotReciever>();
+
+        if (splineAnalyser == null)
+            splineAnalyser = GetComponent<SplineAnalyser>();
+
+        if (carRigidbody == null)
+            carRigidbody = GetComponent<Rigidbody>();
 
         originalRenderers = GetComponentsInChildren<Renderer>(true);
 
@@ -36,12 +48,37 @@ public class CarGhostController : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsSpawned || IsServer || IsOwner)
+        if (!IsSpawned || IsOwner)
             return;
 
-        if (snapshotReceiver == null ||
-            !snapshotReceiver.hasSnapshot)
+        if (carInputNetwork == null)
             return;
+
+        float inputAge = carInputNetwork.GetInputAge();
+
+        if (IsServer)
+        {
+            if (inputAge >= ghostAfterSeconds)
+            {
+                ActivateGhost();
+
+                if (ghostInstance != null)
+                {
+                    UpdateGhostPosition(inputAge);
+                }
+            }
+            else
+            {
+                DeactivateGhost();
+            }
+
+            return;
+        }
+        if (snapshotReceiver == null ||!snapshotReceiver.hasSnapshot)
+        {
+            DeactivateGhost();
+            return;
+        }
 
         float snapshotAge =
             (float)snapshotReceiver.GetSnapshotAge();
@@ -49,7 +86,9 @@ public class CarGhostController : NetworkBehaviour
         if (snapshotAge >= ghostAfterSeconds)
         {
             ActivateGhost();
-            UpdateGhostPosition(snapshotAge);
+
+            if (ghostInstance != null)
+                UpdateGhostPosition(snapshotAge);
         }
         else
         {
@@ -59,6 +98,9 @@ public class CarGhostController : NetworkBehaviour
 
     private void ActivateGhost()
     {
+        if (ghostVisualPrefab == null)
+            return;
+
         if (ghostInstance == null)
         {
             ghostInstance = Instantiate(ghostVisualPrefab);
@@ -76,30 +118,91 @@ public class CarGhostController : NetworkBehaviour
 
     private void UpdateGhostPosition(float age)
     {
-        CarSnapshot snapshot = snapshotReceiver.latestSnapshot;
+        if (ghostInstance == null)
+            return;
 
-        // Predict position using the last known velocity.
-        Vector3 predictedPosition =
-            snapshot.position + snapshot.velocity * age;
+        Vector3 startPosition;
+        float speed;
+        Quaternion startRotation;
 
-        // Predict rotation using the last known angular velocity.
-        Quaternion predictedRotation = snapshot.rotation;
-
-        float angularSpeed = snapshot.angularVelocity.magnitude;
-
-        if (angularSpeed > 0.001f)
+        // Host/server: use the authoritative car state.
+        if (IsServer)
         {
-            Quaternion rotationChange = Quaternion.AngleAxis(
-                angularSpeed * age * Mathf.Rad2Deg,
-                snapshot.angularVelocity.normalized
-            );
+            startPosition = transform.position;
+            startRotation = transform.rotation;
 
-            predictedRotation = rotationChange * snapshot.rotation;
+            if (carRigidbody != null)
+                speed = carRigidbody.linearVelocity.magnitude;
+            else
+                speed = 0f;
+        }
+        // Clients: use the last received snapshot.
+        else
+        {
+            if (snapshotReceiver == null ||
+                !snapshotReceiver.hasSnapshot)
+                return;
+
+            CarSnapshot snapshot =
+                snapshotReceiver.latestSnapshot;
+
+            startPosition = snapshot.position;
+            startRotation = snapshot.rotation;
+            speed = snapshot.velocity.magnitude;
+        }
+
+        // Use the spline analyser to predict the ghost's position.
+        if (splineAnalyser != null &&
+            splineAnalyser.PredictAlongRacingLine(
+                startPosition,
+                speed,
+                age,
+                out Vector3 predictedPosition))
+        {
+            // Find the track direction at the predicted position.
+            if (splineAnalyser.FindNearestPoint(predictedPosition))
+            {
+                Vector3 predictedDirection =
+                    splineAnalyser.trackDirection.normalized;
+
+                if (predictedDirection.sqrMagnitude > 0.001f)
+                {
+                    Quaternion predictedRotation =
+                        Quaternion.LookRotation(
+                            predictedDirection,
+                            Vector3.up
+                        );
+
+                    ghostInstance.transform.SetPositionAndRotation(
+                        predictedPosition,
+                        predictedRotation
+                    );
+
+                    return;
+                }
+            }
+        }
+
+        // Fallback: linear prediction if spline prediction fails.
+        Vector3 fallbackPosition = startPosition;
+
+        if (IsServer)
+        {
+            if (carRigidbody != null)
+                fallbackPosition += carRigidbody.linearVelocity * age;
+        }
+        else
+        {
+            CarSnapshot snapshot =
+                snapshotReceiver.latestSnapshot;
+
+            fallbackPosition =
+                snapshot.position + snapshot.velocity * age;
         }
 
         ghostInstance.transform.SetPositionAndRotation(
-            predictedPosition,
-            predictedRotation
+            fallbackPosition,
+            startRotation
         );
     }
 

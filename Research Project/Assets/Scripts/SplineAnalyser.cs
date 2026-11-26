@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.Splines;
 using Unity.Mathematics;
+using Unity.Netcode;
 
-public class SplineAnalyser : MonoBehaviour
+public class SplineAnalyser : NetworkBehaviour
 {
     [Header("Spline Reference")]
     [SerializeField] private SplineContainer splineContainer;
@@ -195,10 +196,47 @@ public class SplineAnalyser : MonoBehaviour
 
         return false;
     }
+    private bool FindOwnedCar()
+    {
+        if (NetworkManager.Singleton == null)
+            return false;
 
+        foreach (NetworkObject networkObject in
+            NetworkManager.Singleton.SpawnManager.SpawnedObjectsList)
+        {
+            if (!networkObject.IsOwner)
+                continue;
+
+            Rigidbody ownedRb =
+                networkObject.GetComponent<Rigidbody>();
+
+            if (ownedRb == null)
+                continue;
+
+            carToDebug = ownedRb.transform;
+            return true;
+        }
+
+        return false;
+    }
     private void Update()
     {
+        if (NetworkManager.Singleton == null)
+            return;
+
+        if (!NetworkManager.Singleton.IsClient)
+            return;
+
+        if (!FindOwnedCar())
+            return;
+
         if (carToDebug == null)
+            return;
+
+        Rigidbody debugRb =
+            carToDebug.GetComponent<Rigidbody>();
+
+        if (debugRb == null)
             return;
 
         if (FindNearestPoint(carToDebug.position))
@@ -215,36 +253,26 @@ public class SplineAnalyser : MonoBehaviour
                 Color.green
             );
         }
-        Rigidbody debugRb = carToDebug.GetComponent<Rigidbody>();
 
-        if (debugRb != null)
+        float speed = debugRb.linearVelocity.magnitude;
+
+        if (PredictAlongRacingLine(
+            carToDebug.position,
+            speed,
+            0.5f,
+            out Vector3 predictedPosition))
         {
-            float speed = debugRb.linearVelocity.magnitude;
-
-            if (PredictAlongRacingLine(
+            Debug.DrawLine(
                 carToDebug.position,
-                speed,
-                0.5f,
-                out Vector3 predictedPosition))
-            {
-                Debug.DrawLine(
-                    carToDebug.position,
-                    predictedPosition,
-                    Color.magenta
-                );
+                predictedPosition,
+                Color.magenta
+            );
 
-                Debug.DrawLine(
-                    predictedPosition - Vector3.right * 0.5f,
-                    predictedPosition + Vector3.right * 0.5f,
-                    Color.magenta
-                );
-
-                Debug.DrawLine(
-                    predictedPosition - Vector3.forward * 0.5f,
-                    predictedPosition + Vector3.forward * 0.5f,
-                    Color.magenta
-                );
-            }
+            Debug.DrawLine(
+                carToDebug.position,
+                predictedPosition,
+                Color.magenta
+            );
         }
     }
 }

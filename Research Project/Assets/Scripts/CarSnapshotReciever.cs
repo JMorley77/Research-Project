@@ -9,11 +9,11 @@ public class CarSnapshotReciever : NetworkBehaviour
 
     public double lastReceiveTime { get; private set; }
 
+    private bool hasReceivedSnapshot;
+
+
     public void ReceiveSnapshot(CarSnapshot snapshot)
     {
-        // Only process snapshots on clients
-        if (IsServer)
-            return;
 
         // Ignore older snapshots
         if (hasSnapshot && snapshot.timeStamp <= latestSnapshot.timeStamp)
@@ -24,24 +24,28 @@ public class CarSnapshotReciever : NetworkBehaviour
         lastReceiveTime = Time.realtimeSinceStartupAsDouble;
 
         hasSnapshot = true;
+        hasReceivedSnapshot = true;
     }
 
     public double GetSnapshotAge()
     {
-        if (!hasSnapshot)
+        if (!hasReceivedSnapshot)
             return 0;
 
-        return NetworkManager.LocalTime.Time - latestSnapshot.timeStamp;
+        return Time.realtimeSinceStartupAsDouble - lastReceiveTime;
     }
 
-    public double GetTimeSinceLastReceive()
+    public float GetTimeSinceLastReceive()
     {
-        if (!hasSnapshot)
-            return 0;
+        if (!hasReceivedSnapshot)
+            return float.MaxValue;
 
-        return Time.realtimeSinceStartupAsDouble- lastReceiveTime;
+        return (float)(Time.realtimeSinceStartupAsDouble - lastReceiveTime);
     }
-
+    public bool HasReceivedSnapshot()
+    {
+        return hasReceivedSnapshot;
+    }
     private void Update()
     {
         if (!IsSpawned || IsServer || !hasSnapshot)

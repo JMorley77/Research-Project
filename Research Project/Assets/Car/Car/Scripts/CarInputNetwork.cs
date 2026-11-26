@@ -7,6 +7,8 @@ public class CarInputNetwork : NetworkBehaviour
     public float throttle;
     public float steering;
     public bool drifting;
+    private double lastInputReceiveTime;
+
 
     void Update()
     {
@@ -53,10 +55,26 @@ public class CarInputNetwork : NetworkBehaviour
         this.throttle = Mathf.Clamp(throttle, -1f, 1f);
         this.steering = Mathf.Clamp(steering, -1f, 1f);
         this.drifting = drifting;
+        if (IsServer)
+        {
+            lastInputReceiveTime =Time.realtimeSinceStartupAsDouble;
+        }
     }
+    public float GetInputAge()
+    {
+        if (!IsServer)
+            return 0f;
 
+        return (float)(
+            Time.realtimeSinceStartupAsDouble - lastInputReceiveTime
+        );
+    }
     public override void OnNetworkDespawn()
     {
+        if (IsServer)
+        {
+            lastInputReceiveTime =Time.realtimeSinceStartupAsDouble;
+        }
         throttle = 0f;
         steering = 0f;
         drifting = false;

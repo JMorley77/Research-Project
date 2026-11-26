@@ -44,7 +44,7 @@ public class CarSnapshotSender : NetworkBehaviour
         DistributeSnapshotRpc(snapshot);
     }
 
-    [Rpc(SendTo.NotServer)]
+    [Rpc(SendTo.Everyone)]
     private void DistributeSnapshotRpc(CarSnapshot snapshot)
     {
         if (receiver == null)
